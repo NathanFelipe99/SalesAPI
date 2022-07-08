@@ -7,7 +7,7 @@ class User {
     id?: string;
 
     @Column()
-    caUsuario!: string;
+    caUsuario?: string;
 
     @Column()
     cnUsuario!: number;
@@ -19,10 +19,10 @@ class User {
     anSenha?: string;
 
     @Column()
-    anEmail!: string;
+    anEmail?: string;
 
     @Column()
-    caCPF!: string;
+    caCPF?: string;
 
     @Column()
     anTelefone?: string;

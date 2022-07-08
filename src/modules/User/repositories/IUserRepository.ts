@@ -8,11 +8,10 @@ interface IUserRepository {
     findByEmail(anEmail: string): Promise<User | undefined>;
     findByCPF(caCPF: string): Promise<User | undefined>;
     findAll(): Promise<User[]>;
-    find(field: string, value: string): Promise<User | undefined>;
     update({ caUsuario, anEmail, caCPF, anTelefone }: IUpdateUserDTO): Promise<User>;
-    delete(id: string): Promise<void>;
-    changePassword(id: string, anSenha: string): Promise<void>;
-    setAdmin(id: string): Promise<void>;
+    delete(id: string): void;
+    changePassword(id: string, anSenha: string): void;
+    setAdmin(id: string): void;
 }
 
 export { IUserRepository };

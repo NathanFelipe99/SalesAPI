@@ -1,4 +1,5 @@
 import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
+import { IGenericSearchUserDTO } from "../../dtos/IGenericSearchUserDTO";
 import { IUpdateUserDTO } from "../../dtos/IUpdateUserDTO";
 import { User } from "../../infra/model/User";
 import { IUserRepository } from "../IUserRepository";
@@ -52,24 +53,40 @@ class UserRepositoryInMemory implements IUserRepository {
         return this.wUsers;
     }
 
-    async find(field: string, value: string): Promise<User | undefined> {
-        throw new Error("Method not implemented.");
+    async update({ caUsuario, anEmail, caCPF, anTelefone }: IUpdateUserDTO): Promise<User> {
+        const wFindIndex = this.wUsers.findIndex(wUser => wUser.caUsuario === caUsuario);
+
+        if (wFindIndex === -1) {
+            throw new Error("User not found");
+        } else {
+            this.wUsers[wFindIndex].caUsuario = caUsuario;
+            this.wUsers[wFindIndex].anEmail = anEmail;
+            this.wUsers[wFindIndex].caCPF = caCPF;
+            this.wUsers[wFindIndex].anTelefone = anTelefone;
+
+            delete this.wUsers[wFindIndex].anSenha;
+            
+            return this.wUsers[wFindIndex];
+        }
     }
 
-    update({ caUsuario, anEmail, caCPF, anTelefone }: IUpdateUserDTO): Promise<User> {
-        throw new Error("Method not implemented.");
+    delete(id: string): void {
+        const wFindIndex = this.wUsers.findIndex(wUser => wUser.id === id);
+
+        this.wUsers[wFindIndex].boInativo = 1;
+
     }
 
-    delete(id: string): Promise<void> {
-        throw new Error("Method not implemented.");
+    changePassword(id: string, anSenha: string): void {
+        const wFindIndex = this.wUsers.findIndex(wUser => wUser.id === id);
+
+        this.wUsers[wFindIndex].anSenha = anSenha;
     }
 
-    changePassword(id: string, anSenha: string): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
+    setAdmin(id: string): void {
+        const wFindIndex = this.wUsers.findIndex(wUser => wUser.id === id);
 
-    setAdmin(id: string): Promise<void> {
-        throw new Error("Method not implemented.");
+        this.wUsers[wFindIndex].boAdmin = 1;
     }
 
 }
