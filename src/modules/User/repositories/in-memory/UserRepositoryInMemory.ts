@@ -1,5 +1,4 @@
 import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
-import { IGenericSearchUserDTO } from "../../dtos/IGenericSearchUserDTO";
 import { IUpdateUserDTO } from "../../dtos/IUpdateUserDTO";
 import { User } from "../../infra/model/User";
 import { IUserRepository } from "../IUserRepository";
@@ -50,11 +49,15 @@ class UserRepositoryInMemory implements IUserRepository {
     }
 
     async findAll(): Promise<User[]> {
+        for (let wIdx = 0; wIdx < this.wUsers.length; wIdx++) {
+            delete this.wUsers[wIdx].anSenha;
+        }
+
         return this.wUsers;
     }
 
-    async update({ caUsuario, anEmail, caCPF, anTelefone }: IUpdateUserDTO): Promise<User> {
-        const wFindIndex = this.wUsers.findIndex(wUser => wUser.caUsuario === caUsuario);
+    async update(id: string, { caUsuario, anEmail, caCPF, anTelefone }: IUpdateUserDTO): Promise<User> {
+        const wFindIndex = this.wUsers.findIndex(wUser => wUser.id === id);
 
         if (wFindIndex === -1) {
             throw new Error("User not found");
@@ -77,13 +80,13 @@ class UserRepositoryInMemory implements IUserRepository {
 
     }
 
-    changePassword(id: string, anSenha: string): void {
+    async changePassword(id: string, anSenha: string): Promise<void> {
         const wFindIndex = this.wUsers.findIndex(wUser => wUser.id === id);
 
         this.wUsers[wFindIndex].anSenha = anSenha;
     }
 
-    setAdmin(id: string): void {
+    async setAdmin(id: string): Promise<void> {
         const wFindIndex = this.wUsers.findIndex(wUser => wUser.id === id);
 
         this.wUsers[wFindIndex].boAdmin = 1;

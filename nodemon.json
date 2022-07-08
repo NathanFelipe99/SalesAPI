@@ -2,5 +2,5 @@
     "watch": ["src"],
     "ext": "ts, json",
     "ignore": ["node_modules", "dist", "**/*.spec.ts"],
-    "exec": "node --loader ts-node/esm ./src/shared/server/index.ts"
+    "exec": "node --loader ts-node/esm --es-module-specifier-resolution=node ./src/shared/server/index.ts"
 }

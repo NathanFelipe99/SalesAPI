@@ -8,7 +8,7 @@ interface IUserRepository {
     findByEmail(anEmail: string): Promise<User | undefined>;
     findByCPF(caCPF: string): Promise<User | undefined>;
     findAll(): Promise<User[]>;
-    update({ caUsuario, anEmail, caCPF, anTelefone }: IUpdateUserDTO): Promise<User>;
+    update(id: string, { caUsuario, anEmail, caCPF, anTelefone }: IUpdateUserDTO): Promise<User>;
     delete(id: string): void;
     changePassword(id: string, anSenha: string): void;
     setAdmin(id: string): void;
