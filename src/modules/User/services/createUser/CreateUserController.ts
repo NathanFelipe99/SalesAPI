@@ -7,11 +7,11 @@ class CreateUserController {
         try {
             const { caUsuario, anSenha, anEmail, caCPF, anTelefone } = request.body;
 
-            const wCreateUser = container.resolve(
+            const wCreateUserService = container.resolve(
                 CreateUserService
             );
 
-            const wUser = await wCreateUser.execute({
+            const wUser = await wCreateUserService.execute({
                 caUsuario,
                 anSenha,
                 anEmail,

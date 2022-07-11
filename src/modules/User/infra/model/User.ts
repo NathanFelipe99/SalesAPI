@@ -39,7 +39,6 @@ class User {
         if (!this.id) {
             this.id = uuidV4();
             this.createdAt = new Date();
-            
             this.boInativo = 0;
             this.boAdmin = 0;
         }
