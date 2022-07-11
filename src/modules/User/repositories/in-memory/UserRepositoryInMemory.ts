@@ -19,40 +19,28 @@ class UserRepositoryInMemory implements IUserRepository {
 
         this.wUsers.push(wUser);
 
-        delete wUser.anSenha;
+        console.log(this.wUsers);
 
         return wUser;
     }
 
     async findById(id: string): Promise<User | undefined> {
-        const wUser = this.wUsers.find(wUser => wUser.id === id);
-
-        wUser && delete wUser.anSenha;
-
-        return wUser;
+        return this.wUsers.find(wUser => wUser.id === id);
     }
 
+    async findByCaUsuario(caUsuario: string): Promise<User | undefined> {
+        return this.wUsers.find(wUser => wUser.caUsuario === caUsuario);
+    };
+
     async findByEmail(anEmail: string): Promise<User | undefined> {
-        const wUser = this.wUsers.find(wUser => wUser.anEmail === anEmail);
-
-        wUser && delete wUser.anSenha;
-
-        return wUser;
+        return this.wUsers.find(wUser => wUser.anEmail === anEmail);
     }
 
     async findByCPF(caCPF: string): Promise<User | undefined> {
-        const wUser = this.wUsers.find(wUser => wUser.caCPF === caCPF);
-
-        wUser && delete wUser.anSenha;
-
-        return wUser;
+        return this.wUsers.find(wUser => wUser.caCPF === caCPF);
     }
 
     async findAll(): Promise<User[]> {
-        for (let wIdx = 0; wIdx < this.wUsers.length; wIdx++) {
-            delete this.wUsers[wIdx].anSenha;
-        }
-
         return this.wUsers;
     }
 
@@ -67,8 +55,6 @@ class UserRepositoryInMemory implements IUserRepository {
             this.wUsers[wFindIndex].caCPF = caCPF;
             this.wUsers[wFindIndex].anTelefone = anTelefone;
 
-            delete this.wUsers[wFindIndex].anSenha;
-            
             return this.wUsers[wFindIndex];
         }
     }
@@ -77,7 +63,6 @@ class UserRepositoryInMemory implements IUserRepository {
         const wFindIndex = this.wUsers.findIndex(wUser => wUser.id === id);
 
         this.wUsers[wFindIndex].boInativo = 1;
-
     }
 
     async changePassword(id: string, anSenha: string): Promise<void> {

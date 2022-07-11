@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { v4 as uuidV4 } from "uuid";
 
 @Entity('user')
@@ -9,10 +9,9 @@ class User {
     @Column()
     caUsuario?: string;
 
-    @Column()
     cnUsuario!: number;
 
-    @Column({ default: 0 })
+    @Column()
     boAdmin!: number;
 
     @Column()
@@ -27,19 +26,21 @@ class User {
     @Column()
     anTelefone?: string;
 
-    @Column({ default: 0 })
+    @Column()
     boInativo?: number;
 
     @CreateDateColumn({ name: 'dtIncSys' })
     createdAt?: Date;
 
     @UpdateDateColumn({ name: 'dtAltSys' })
-    updatedAt?: Date;
+    updatedAt!: Date;
 
     constructor() {
         if (!this.id) {
             this.id = uuidV4();
             this.createdAt = new Date();
+            
+            this.boInativo = 0;
             this.boAdmin = 0;
         }
     }

@@ -5,6 +5,7 @@ import { User } from "../infra/model/User";
 interface IUserRepository {
     create({ caUsuario, anSenha, anEmail, caCPF, anTelefone }: ICreateUserDTO): Promise<User>;
     findById(id: string): Promise<User | undefined>;
+    findByCaUsuario(caUsuario: string): Promise<User | undefined>;
     findByEmail(anEmail: string): Promise<User | undefined>;
     findByCPF(caCPF: string): Promise<User | undefined>;
     findAll(): Promise<User[]>;
