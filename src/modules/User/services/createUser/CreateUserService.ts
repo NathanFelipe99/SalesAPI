@@ -2,7 +2,7 @@ import { hashSync } from "bcrypt";
 import { inject, injectable } from "tsyringe";
 import { AppError } from "../../../../shared/error/AppError";
 import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
-import { User } from "../../infra/model/User";
+import { IListUserResponseDTO } from "../../dtos/IListUserResponseDTO";
 import { IUserRepository } from "../../repositories/IUserRepository";
 import validator from "validator";
 import pkg from "gerador-validador-cpf";
@@ -13,7 +13,7 @@ const { validate } = pkg;
 class CreateUserService {
     constructor(
         @inject('UserRepository')
-        private readonly _repository: IUserRepository
+        private readonly _wRepository: IUserRepository
     ) { }
     
     async execute({
@@ -22,13 +22,13 @@ class CreateUserService {
         anEmail, 
         caCPF, 
         anTelefone
-    }: ICreateUserDTO): Promise<User> {
+    }: ICreateUserDTO): Promise<IListUserResponseDTO> {
         await this.verifyFormats(anEmail, caCPF);
         await this.verifyExistence(caUsuario, anEmail, caCPF);
 
         const wHash = hashSync(anSenha, 8);
-        const wCPF = caCPF.replace(/[^\d]+/g, '');
-        const wUser = await this._repository.create({
+
+        const wUser = await this._wRepository.create({
             caUsuario,
             anSenha: wHash,
             anEmail,
@@ -36,9 +36,17 @@ class CreateUserService {
             anTelefone
         });
 
-        delete wUser.anSenha;
-
-        return wUser;
+        return {
+            id: wUser.id,
+            cnUsuario: wUser.cnUsuario,
+            caUsuario: wUser.caUsuario,
+            anEmail: wUser.anEmail,
+            caCPF: wUser.caCPF,
+            anTelefone: wUser.anTelefone,
+            boInativo: wUser.boInativo,
+            boAdmin: wUser.boAdmin,
+            createdAt: wUser.createdAt
+        };
     }
 
     private async verifyFormats(anEmail: string, caCPF: string) {
@@ -48,10 +56,10 @@ class CreateUserService {
     }
 
     private async verifyExistence(caUsuario: string, anEmail: string, caCPF: string) {
-        const wVerifyCaUsuario = await this._repository.findByCaUsuario(caUsuario);
-        const wVerifyEmail = await this._repository.findByEmail(anEmail);
-        const wVerifyCPF = await this._repository.findByCPF(caCPF);
-        console.log('uuh', wVerifyCPF);
+        const wVerifyCaUsuario = await this._wRepository.findByCaUsuario(caUsuario);
+        const wVerifyEmail = await this._wRepository.findByEmail(anEmail);
+        const wVerifyCPF = await this._wRepository.findByCPF(caCPF);
+
         if (wVerifyCaUsuario || wVerifyEmail || wVerifyCPF) {
             throw new AppError('Já existe um usuário com esse login, email ou CPF!');
         }
