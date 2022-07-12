@@ -1,33 +1,23 @@
-import { hashSync } from "bcrypt";
-import { inject, injectable } from "tsyringe";
-import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
 import { IListUserResponseDTO } from "../../dtos/IListUserResponseDTO";
+import { IUpdateUserDTO } from "../../dtos/IUpdateUserDTO";
 import { IUserRepository } from "../../repositories/IUserRepository";
+import { inject, injectable } from "tsyringe";
 import { UserUtils } from "../../utils/UserUtils";
 
 @injectable()
-class CreateUserService {
+class UpdateUserService {
     constructor(
         @inject('UserRepository')
         private readonly _wRepository: IUserRepository,
         private readonly _wUserUtils: UserUtils
     ) { }
-    
-    async execute({
-        caUsuario, 
-        anSenha, 
-        anEmail, 
-        caCPF, 
-        anTelefone
-    }: ICreateUserDTO): Promise<IListUserResponseDTO> {
+
+    async execute(id: string, { caUsuario, anEmail, caCPF, anTelefone }: IUpdateUserDTO): Promise<IListUserResponseDTO> {
         await this._wUserUtils.verifyFormats(anEmail, caCPF);
         await this._wUserUtils.verifyExistence(caUsuario, anEmail, caCPF);
 
-        const wHash = hashSync(anSenha, 8);
-
-        const wUser = await this._wRepository.create({
+        const wUser = await this._wRepository.update(id, {
             caUsuario,
-            anSenha: wHash,
             anEmail,
             caCPF,
             anTelefone
@@ -47,4 +37,4 @@ class CreateUserService {
     }
 }
 
-export { CreateUserService };
+export { UpdateUserService };
