@@ -13,7 +13,7 @@ class ListUserByIdService {
     async execute(id: string): Promise<IListUserResponseDTO> {
         const wUser = await this._wRepository.findById(id);
 
-        if (!wUser) throw new AppError('Usuário não encontrado!');
+        if (!wUser || wUser.boInativo == 1) throw new AppError('Usuário não encontrado!');
 
         return {
             id: wUser.id,
