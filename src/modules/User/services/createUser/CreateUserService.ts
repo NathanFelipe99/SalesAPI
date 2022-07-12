@@ -21,7 +21,7 @@ class CreateUserService {
         anTelefone
     }: ICreateUserDTO): Promise<IListUserResponseDTO> {
         await this._wUserUtils.verifyFormats(anEmail, caCPF);
-        await this._wUserUtils.verifyExistence(caUsuario, anEmail, caCPF);
+        await this._wUserUtils.verifyExistences(caUsuario, anEmail, caCPF);
 
         const wHash = hashSync(anSenha, 8);
 

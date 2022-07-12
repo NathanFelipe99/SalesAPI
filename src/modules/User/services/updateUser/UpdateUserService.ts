@@ -14,7 +14,7 @@ class UpdateUserService {
 
     async execute(id: string, { caUsuario, anEmail, caCPF, anTelefone }: IUpdateUserDTO): Promise<IListUserResponseDTO> {
         await this._wUserUtils.verifyFormats(anEmail, caCPF);
-        await this._wUserUtils.verifyExistence(caUsuario, anEmail, caCPF);
+        await this._wUserUtils.verifyExistences(caUsuario, anEmail, caCPF, id);
 
         const wUser = await this._wRepository.update(id, {
             caUsuario,

@@ -20,13 +20,25 @@ class UserUtils {
         if (!validate(caCPF)) throw new AppError('CPF informado é inválido!');
     }
 
-    async verifyExistence(caUsuario: string, anEmail: string, caCPF: string) {
+    async verifyExistences(caUsuario: string, anEmail: string, caCPF: string, id?: string) {
         const wVerifyCaUsuario = await this._wRepository.findByCaUsuario(caUsuario);
         const wVerifyEmail = await this._wRepository.findByEmail(anEmail);
         const wVerifyCPF = await this._wRepository.findByCPF(caCPF);
 
-        if (wVerifyCaUsuario || wVerifyEmail || wVerifyCPF) {
-            throw new AppError('Já existe um usuário com esse login, email ou CPF!');
+        if (id) {
+            const wUserExists = await this._wRepository.findById(id);
+
+            if (!wUserExists) throw new AppError('Usuário não encontrado!');
+
+            if (wVerifyCaUsuario && (caUsuario != wUserExists.caUsuario)) throw new AppError('Usuário com este Login já existe!');
+            if (wVerifyEmail && (anEmail != wUserExists.anEmail)) throw new AppError('Usuário com este Email já existe!');
+            if (wVerifyCPF && (caCPF != wUserExists.caCPF)) throw new AppError('Usuário com este CPF já existe!');
+
+            return;
+        } else {
+            if (wVerifyCaUsuario || wVerifyEmail || wVerifyCPF) {
+                throw new AppError('Usuário com este Login, Email ou CPF já existe!');
+            }
         }
     }
 }
