@@ -4,17 +4,20 @@ import { CreateUserController } from "../../modules/User/services/createUser/Cre
 import { ListAllUsersController } from "../../modules/User/services/listAllUsers/ListAllUsersController";
 import { ListUserByIdController } from "../../modules/User/services/listUserById/ListUserByIdController";
 import { UpdateUserController } from "../../modules/User/services/updateUser/UpdateUserController";
+import { DeleteUserController } from "../../modules/User/services/deleteUser/DeleteUserController";
 
 const usuariosRoutes = Router();
 
-const createUserController = new CreateUserController();
-const listAllUsersController = new ListAllUsersController();
-const listUserByIdController = new ListUserByIdController();
-const updateUserController = new UpdateUserController();
+const wCreateUserController = new CreateUserController();
+const wListAllUsersController = new ListAllUsersController();
+const wListUserByIdController = new ListUserByIdController();
+const wUpdateUserController = new UpdateUserController();
+const wDeleteUserController = new DeleteUserController();
 
-usuariosRoutes.post('/', createUserController.handle);
-usuariosRoutes.get('/listar', listAllUsersController.handle);
-usuariosRoutes.get('/listar/:id', listUserByIdController.handle);
-usuariosRoutes.put('/:id', updateUserController.handle);
+usuariosRoutes.post('/', wCreateUserController.handle);
+usuariosRoutes.get('/listar', wListAllUsersController.handle);
+usuariosRoutes.get('/listar/:id', wListUserByIdController.handle);
+usuariosRoutes.put('/:id', wUpdateUserController.handle);
+usuariosRoutes.delete('/:id', wDeleteUserController.handle);
 
 export { usuariosRoutes };
