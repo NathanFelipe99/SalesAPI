@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  database:
+    image: postgres
+    container_name: sales_Database
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=sales_database
+    volumes:
+      - pgdata:/data/postgres
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: salesAPI
+    command: npm run dev
+    restart: always
+    ports:
+      - 3000:3000
+      - 9229:9229
+    volumes:
+      - .:/usr/src/app
+    links:
+      - database
+    depends_on:
+      - database
+
+volumes:
+  pgdata:
+    driver: local

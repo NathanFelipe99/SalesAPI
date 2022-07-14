@@ -3,15 +3,20 @@ import 'reflect-metadata';
 import express from 'express';
 import cors from 'cors';
 import 'express-async-errors';
-import './../../shared/container';
+import '../../container';
+import { routes } from '../../routes';
+import responseFilter from '../../middlewares/response.filter';
+import { dataSource } from '../typeorm';
 
-import { routes } from './../../shared/routes';
-import responseFilter from '../middlewares/response.filter';
+
+await dataSource.initialize().then(() => {
+    console.log('DataSource initialized');
+});
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true })); 
 
 app.use('/api/v1', routes, responseFilter);
 
