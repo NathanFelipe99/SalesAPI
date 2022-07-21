@@ -6,12 +6,12 @@ import 'express-async-errors';
 import '../../container';
 import { routes } from '../../routes';
 import responseFilter from '../../middlewares/response.filter';
-import { dataSource } from '../typeorm';
+import createConnection from '../typeorm';
+import dotenv from 'dotenv';
 
+dotenv.config({ path: './.env' });
 
-await dataSource.initialize().then(() => {
-    console.log('DataSource initialized');
-});
+await createConnection();
 
 const app = express();
 app.use(cors());

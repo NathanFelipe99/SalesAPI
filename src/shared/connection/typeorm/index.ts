@@ -1,14 +1,28 @@
-import { DataSource } from "typeorm";
+import pkg from "typeorm";
+const { createConnection, getConnectionOptions } = pkg;
+import { Connection } from "typeorm";
 
-export const dataSource = new DataSource({
-    type: "postgres",
-    database: "sales_database",
-    host: "localhost",
-    port: 5432,
-    username: "root",
-    password: "1234",
-    entities: [
-        "./src/modules/**/infra/models/**/*.ts",
-    ],
-    synchronize: true
-});
+export default async (host = "localhost"): Promise<Connection> => {
+    const defaultOptions = await getConnectionOptions();
+console.log('aqui:', defaultOptions)
+    if (process.env.SERVER_TYPE == 'dev') {
+        console.log('aqui 2:', defaultOptions);
+        return createConnection(
+            Object.assign(defaultOptions, {
+                host: process.env.NODE_ENV === "test" ? "localhost" : host,
+                database:
+                    process.env.NODE_ENV === "test"
+                        ? "oficina_database"
+                        : defaultOptions.database,
+            })
+        );
+    } else {
+        return createConnection(
+            Object.assign(defaultOptions, {
+                host: process.env.DATABASE_HOST,
+                database: process.env.DATABASE_NAME
+            })
+        );
+    }
+
+}; 

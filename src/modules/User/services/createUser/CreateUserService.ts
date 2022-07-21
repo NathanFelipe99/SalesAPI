@@ -1,9 +1,10 @@
-import { hashSync } from "bcrypt";
+import pkg from "bcryptjs";
 import { inject, injectable } from "tsyringe";
 import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
 import { IListUserResponseDTO } from "../../dtos/IListUserResponseDTO";
 import { IUserRepository } from "../../repositories/IUserRepository";
 import { UserUtils } from "../../utils/UserUtils";
+const { hashSync } = pkg;
 
 @injectable()
 class CreateUserService {

@@ -2,17 +2,18 @@ version: "3.9"
 
 services:
   database:
-    image: postgres
+    image: mysql:5.7
     container_name: sales_Database
     restart: always
     ports:
-      - 5432:5432
+      - 3306:3306
     environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=1234
-      - POSTGRES_DB=sales_database
+      MYSQL_DATABASE: 'sales'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: '1234'
+      MYSQL_ROOT_PASSWORD: '1234'
     volumes:
-      - pgdata:/data/postgres
+      - my-db:/var/lib/mysql
 
   app:
     build:
@@ -32,5 +33,5 @@ services:
       - database
 
 volumes:
-  pgdata:
+  my-db:
     driver: local
